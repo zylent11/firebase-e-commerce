@@ -7,7 +7,7 @@ const loginBtn = document.getElementById("loginBtn");
 onAuthStateChanged(auth, (user) => {
   if (user) {
     // User already logged in
-    window.location.href = "/dashboard";
+    window.location.href = "/dashboard.html";
   }
 });
 
@@ -19,7 +19,7 @@ loginBtn.addEventListener("click", async () => {
     // Sign in admin
     await signInWithEmailAndPassword(auth, email, password);
     // Redirect to dashboard
-    window.location.href = "dashboard";
+    window.location.href = "dashboard.html";
   } catch (error) {
     alert("Login failed: " + error.message);
   }

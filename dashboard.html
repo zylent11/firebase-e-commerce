@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Bookstore Admin Dashboard</title>
+    <link rel="stylesheet" href="src/dashboard.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <nav
+      class="flex items-center justify-between p-4 pl-16 pr-16 bg-[#F1E8D7] shadow-md"
+    >
+      <!-- Logo -->
+      <div class="flex items-center">
+        <a href="/">
+          <img src="images/sheperdLogo.png" alt="Logo" class="h-24" />
+        </a>
+      </div>
+
+      <!-- Right Section: Sign-in, Search, Cart -->
+      <div class="flex items-center space-x-6">
+        <!-- Sign In Button -->
+
+        <a
+          id="logoutBtn"
+          class="hidden md:flex items-center gap-1 text-xs uppercase tracking-wider hover:text-primary transition-colors"
+          href="/"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-user h-4 w-4"
+          >
+            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          Logout
+        </a>
+      </div>
+    </nav>
+    <!-- <h1>Admin Dashboard</h1> -->
+
+    <!-- Summary Section -->
+    <div id="summary" class="summary-container">
+      <h2>Overview</h2>
+      <div class="summary-cards">
+        <!-- Card for Total Books -->
+        <div class="summary-card">
+          <div class="card-icon">
+            <i class="fas fa-book"></i>
+          </div>
+          <div class="card-info">
+            <p>Total Books</p>
+            <span id="totalBooks">0</span>
+          </div>
+        </div>
+
+        <!-- Card for Total Categories -->
+        <div class="summary-card">
+          <div class="card-icon">
+            <i class="fas fa-th-list"></i>
+          </div>
+          <div class="card-info">
+            <p>Total Categories</p>
+            <span id="totalCategories">0</span>
+          </div>
+        </div>
+
+        <!-- Card for Total Principal -->
+        <div class="summary-card">
+          <div class="card-icon">
+            <i class="fas fa-money-bill-wave"></i>
+          </div>
+          <div class="card-info">
+            <p>Total Principal</p>
+            <span id="totalPrincipal">0</span>
+          </div>
+        </div>
+
+        <!-- Card for Total Prospect -->
+        <div class="summary-card">
+          <div class="card-icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <div class="card-info">
+            <p>Total Prospect</p>
+            <span id="totalProspect">0</span>
+          </div>
+        </div>
+
+        <!-- Card for Return Of Investment -->
+        <div class="summary-card">
+          <div class="card-icon">
+            <i class="fas fa-chart-pie"></i>
+          </div>
+          <div class="card-info">
+            <p>Return Of Investment</p>
+            <span id="totalROI">0</span>
+          </div>
+        </div>
+
+        <!-- Card for Total Stock -->
+        <div class="summary-card">
+          <div class="card-icon">
+            <i class="fas fa-cogs"></i>
+          </div>
+          <div class="card-info">
+            <p>Total Stock</p>
+            <span id="totalStock">0</span>
+          </div>
+        </div>
+
+        <!-- Card for Total Sold -->
+        <div class="summary-card">
+          <div class="card-icon">
+            <i class="fas fa-truck"></i>
+          </div>
+          <div class="card-info">
+            <p>Total Sold</p>
+            <span id="totalSold">0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HERO SECTION -->
+    <section id="dashboardHero" class="hero">
+      <div class="hero-card">
+        <h2>Total Books</h2>
+        <p id="totalBooks">0</p>
+      </div>
+      <div class="hero-card">
+        <h2>Total Stock</h2>
+        <p id="totalStock">0</p>
+      </div>
+      <div class="hero-card">
+        <h2>Total Sold</h2>
+        <p id="totalSold">0</p>
+      </div>
+      <div class="hero-card">
+        <h2>Total ROI</h2>
+        <p id="totalROI">0</p>
+      </div>
+    </section>
+
+    <!-- book search  -->
+    <div>
+      <button id="addBookBtn">Add Book</button>
+
+      <input type="text" id="bookSearch" placeholder="Search books..." />
+    </div>
+    <!-- BOOK CARDS CONTAINER -->
+    <section id="booksContainer" class="card-grid"></section>
+
+    <div class="pagination">
+      <button id="prevPage">Prev</button>
+      <span id="pageInfo"></span>
+      <button id="nextPage">Next</button>
+    </div>
+
+    <!-- Categories Table -->
+    <div>
+      <h2>Categories</h2>
+      <button id="addCategoryBtn">Add Category</button>
+    </div>
+    <table id="categoriesTable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Dynamically populated -->
+      </tbody>
+    </table>
+
+    <!-- Add/Edit Book Modal -->
+    <div
+      id="bookModal"
+      class="fixed inset-0 hidden items-center justify-center bg-black/50 backdrop-blur-sm z-50"
+    >
+      <div
+        class="bg-white w-full max-w-5xl h-[90vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+      >
+        <!-- HEADER -->
+        <div
+          class="flex justify-between items-center px-6 py-4 border-b bg-gray-50"
+        >
+          <h3 id="bookFormTitle" class="text-xl font-semibold">Add Book</h3>
+          <button
+            id="closeBookModal"
+            class="text-gray-500 hover:text-black text-xl"
+          >
+            ✕
+          </button>
+        </div>
+
+        <!-- FORM -->
+        <form id="bookForm" class="flex-1 overflow-y-auto p-6 space-y-8">
+          <!-- GRID -->
+          <div class="grid grid-cols-3 gap-8">
+            <!-- LEFT: IMAGE -->
+            <div class="col-span-1 space-y-4">
+              <label class="font-medium">Book Image</label>
+
+              <input
+                type="file"
+                id="bookImage"
+                accept="image/*"
+                class="block w-full text-sm"
+              />
+
+              <img
+                id="previewImage"
+                class="rounded-lg border hidden w-full object-cover aspect-[3/4]"
+              />
+            </div>
+
+            <!-- RIGHT SIDE -->
+            <div class="col-span-2 space-y-6">
+              <!-- BASIC INFO -->
+              <div class="space-y-4">
+                <h4 class="font-semibold text-lg border-b pb-2">
+                  Basic Information
+                </h4>
+
+                <input type="hidden" id="sold" />
+
+                <div class="grid grid-cols-1 gap-4">
+                  <input
+                    id="title"
+                    placeholder="Book Title"
+                    required
+                    class="input"
+                  />
+
+                  <input
+                    id="author"
+                    placeholder="Author"
+                    required
+                    class="input"
+                  />
+                </div>
+
+                <textarea
+                  id="description"
+                  placeholder="Description"
+                  class="input h-24"
+                ></textarea>
+
+                <div>
+                  <label class="font-medium mb-2 block">Categories</label>
+                  <div
+                    id="bookCategoryContainer"
+                    class="grid grid-cols-2 gap-2"
+                  ></div>
+                </div>
+              </div>
+
+              <!-- PRICING -->
+              <div class="space-y-4">
+                <h4 class="font-semibold text-lg border-b pb-2">
+                  Pricing & Stock
+                </h4>
+
+                <div class="grid grid-cols-3 gap-4">
+                  <input
+                    id="principal"
+                    type="number"
+                    placeholder="Principal"
+                    class="input"
+                  />
+                  <input
+                    id="price"
+                    type="number"
+                    placeholder="Price"
+                    class="input"
+                  />
+                  <input
+                    id="stock"
+                    type="number"
+                    placeholder="Stock"
+                    class="input"
+                  />
+                </div>
+              </div>
+
+              <!-- PREORDER -->
+              <div class="space-y-4">
+                <label class="flex items-center gap-2 font-semibold">
+                  <input type="checkbox" id="allowedPreorder" />
+                  Enable Preorder
+                </label>
+
+                <div id="preorderSection" class="grid grid-cols-2 gap-4">
+                  <select
+                    id="downpaymentType"
+                    class="input h-12 bg-gray-300 px-4 rounded-lg"
+                  >
+                    <option value="percentage">Percentage</option>
+                    <option value="fixed">Fixed</option>
+                  </select>
+
+                  <input
+                    id="downpaymentValue"
+                    type="number"
+                    placeholder="Downpayment"
+                    class="input h-12 bg-gray-300 px-4 rounded-lg"
+                  />
+                  <input
+                    id="releaseDate"
+                    type="date"
+                    class="input h-12 !bg-gray-300 px-4 rounded-lg"
+                  />
+
+                  <input
+                    id="limit"
+                    type="number"
+                    placeholder="Limit"
+                    class="input h-12 !bg-gray-300 px-4 rounded-lg"
+                  />
+                </div>
+              </div>
+
+              <!-- SALE -->
+              <div class="space-y-4">
+                <label class="flex items-center gap-2 font-semibold">
+                  <input type="checkbox" id="saleEnabled" />
+                  Enable Sale
+                </label>
+
+                <div id="saleSection" class="grid grid-cols-2 gap-4">
+                  <select
+                    id="discountType"
+                    class="input h-12 bg-gray-300 px-4 rounded-lg"
+                  >
+                    <option value="percentage">Percentage</option>
+                    <option value="fixed">Fixed</option>
+                  </select>
+
+                  <input
+                    id="discountValue"
+                    type="number"
+                    placeholder="Discount"
+                    class="input h-12 !bg-gray-300 px-4 rounded-lg"
+                  />
+
+                  <input
+                    id="startDate"
+                    type="date"
+                    class="input h-12 bg-gray-300 px-4 rounded-lg"
+                  />
+                  <input
+                    id="endDate"
+                    type="date"
+                    class="input h-12 bg-gray-300 px-4 rounded-lg"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <!-- FOOTER -->
+        <div class="border-t bg-gray-50 px-6 py-4 flex justify-end gap-3">
+          <button
+            type="button"
+            id="closeBookModal"
+            class="px-4 py-2 rounded-lg border hover:bg-gray-100"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="submit"
+            form="bookForm"
+            class="px-6 py-2 rounded-lg bg-black text-white hover:bg-gray-800"
+          >
+            Save Book
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modular JS -->
+    <script type="module" src="./src/dashboard.js"></script>
+    <script type="module" src="./src/bookForm.js"></script>
+    <script type="module" src="./src/categoryForm.js"></script>
+  </body>
+</html>

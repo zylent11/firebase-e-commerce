@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Bookstore</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      #cartContainer {
+        display: none;
+        width: 100%;
+        height: 100vh;
+        align-content: center;
+        justify-items: center;
+        position: fixed;
+        top: 0;
+        background: rgba(0, 0, 0, 0.5);
+      }
+
+      #cartContainerContent {
+        padding: 20px;
+        width: 500px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        font-family: Arial, sans-serif;
+        color: #333;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      #cartContainer h3 {
+        font-size: 1.6rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: #333;
+        text-align: center;
+      }
+
+      /* Cart List Styling */
+      #cartList {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      #cartList li {
+        font-size: 1rem;
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      #cartList li .cartLiSpan1 {
+        width: 60%;
+      }
+
+      #cartList li .cartLiSpan2 {
+        width: 10%;
+        text-align: right;
+      }
+
+      #cartList li .cartLiSpan3 {
+        width: 10%;
+        text-emphasis: filled;
+        text-align: right;
+        font-size: x-large;
+      }
+
+      #cartList li .cartLiSpan4 {
+        width: 20%;
+        text-align: right;
+      }
+
+      #cartList li button {
+        background-color: #dc3545;
+        color: white;
+        padding: 5px 10px;
+        font-size: 0.9rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      #cartList li button:hover {
+        background-color: #c82333;
+      }
+
+      #cartList li button:active {
+        background-color: #bd2130;
+      }
+
+      /* Quantity Adjuster */
+      #cartList li .quantityAdjuster {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      #cartList li .quantityAdjuster input {
+        width: 40px;
+        padding: 5px;
+        text-align: center;
+        font-size: 1rem;
+      }
+
+      /* Cart Summary */
+      #cartSummary {
+        font-size: 1rem;
+        text-align: center;
+        color: #444;
+      }
+
+      #promoSection {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+
+      #couponCode {
+        padding: 8px;
+        font-size: 1rem;
+        width: 80%;
+        max-width: 250px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      #applyCouponBtn {
+        padding: 8px 16px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      #applyCouponBtn:hover {
+        background-color: #0056b3;
+      }
+
+      #cartBtn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 24px;
+      }
+
+      .cartBtns {
+        padding: 12px 20px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      #cancelCheckoutBtn {
+        background: #fff;
+        color: #000;
+        box-shadow: rgba(0, 255, 0, 0.5) 0px 4px 8px 0px;
+      }
+
+      #cancelCheckoutBtn:hover {
+        background: #ccc; /* Green background on hover */
+        /* color: #fff; White text on hover */
+        /* box-shadow: rgba(0, 255, 0, 1) 0px 6px 12px 0px; Stronger shadow */
+      }
+
+      #checkoutBtn:hover {
+        background-color: #218838;
+      }
+
+      #checkoutBtn:active {
+        background-color: #1e7e34;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 480px) {
+        #cartContainer {
+          width: 90%;
+          padding: 15px;
+        }
+
+        #cartContainer h3 {
+          font-size: 1.4rem;
+        }
+
+        #cartList li {
+          font-size: 0.9rem;
+        }
+
+        #cartSummary p {
+          font-size: 1rem;
+        }
+
+        #couponCode {
+          width: 100%;
+        }
+
+        #applyCouponBtn {
+          width: 100%;
+        }
+
+        #checkoutBtn {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="w-[100%]">
+      <nav
+        class="flex items-center justify-between p-4 pl-16 pr-16 bg-[#F1E8D7] shadow-md"
+      >
+        <!-- Logo -->
+        <div class="flex items-center">
+          <a href="/">
+            <img src="images/sheperdLogo.png" alt="Logo" class="h-24" />
+          </a>
+        </div>
+
+        <!-- Right Section: Sign-in, Search, Cart -->
+        <div class="flex items-center space-x-6">
+          <!-- Sign In Button -->
+
+          <a
+            class="hidden md:flex items-center gap-1 text-xs uppercase tracking-wider hover:text-primary transition-colors"
+            href="login.html"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-user h-4 w-4"
+            >
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            Sign In
+          </a>
+
+          <!-- Search Icon -->
+          <button
+            class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-9 w-9"
+            aria-label="Search"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-search h-5 w-5"
+            >
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.3-4.3"></path>
+            </svg>
+          </button>
+
+          <!-- Cart Icon -->
+
+          <button class="relative group" id="navCartBtn">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-shopping-cart h-5 w-5 hover:text-primary transition-colors"
+            >
+              <circle cx="8" cy="21" r="1"></circle>
+              <circle cx="19" cy="21" r="1"></circle>
+              <path
+                d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"
+              ></path>
+            </svg>
+            <span
+              id="notifCount"
+              class="absolute -top-3 -right-2 bg-red-500 text-primary-foreground rounded-full w-5 h-5 flex items-center justify-center text-xs font-medium"
+            >
+            </span>
+          </button>
+        </div>
+      </nav>
+
+      <main>
+        <div class="max-w-7xl mx-auto px-4 py-8">
+          <div
+            id="indexMain"
+            class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6"
+          ></div>
+        </div>
+      </main>
+
+      <div id="cartContainer">
+        <div id="cartContainerContent">
+          <h3>Cart</h3>
+          <ul id="cartList"></ul>
+
+          <div id="cartSummary">
+            <p>Total: ₱<span id="cartTotal">0</span></p>
+            <!-- <p>Items: <span id="itemCount">0</span></p> -->
+          </div>
+
+          <form id="checkoutForm">
+            <br />
+            <input
+              type="text"
+              id="firstName"
+              required
+              placeholder="First Name"
+            />
+            <input type="text" id="lastName" required placeholder="Last Name" />
+            <input type="tel" id="phone" required placeholder="Phone Number" />
+            <input type="email" id="email" required placeholder="Email" />
+            <textarea
+              id="address"
+              required
+              placeholder="Full Address"
+            ></textarea>
+            <br />
+            <div id="cartBtn">
+              <button type="submit" class="cartBtns" id="checkoutBtn">
+                Checkout
+              </button>
+              <button class="cartBtns" id="cancelCheckoutBtn">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- checkoutForm checkoutForm checkoutForm checkoutForm checkoutForm checkoutForm checkoutForm checkoutForm checkoutForm checkoutForm checkoutForm -->
+      <div id="checkoutFormContainer"></div>
+    </div>
+    <script type="module" src="./src/main.js"></script>
+    <script type="module" src="./src/booksForShop.js"></script>
+  </body>
+</html>
